@@ -122,8 +122,9 @@ export class GreenCalculus {
   businessTravel(body: Body): Promise<Json> {
     return this.calculate("business-travel", body);
   }
-  batch(calculations: Body[]): Promise<Json> {
-    return this.calculate("batch", { calculations });
+  /** Run many calculations in one request; each item names a `methodology`. */
+  batch(items: Body[]): Promise<Json> {
+    return this.calculate("batch", { items });
   }
 }
 

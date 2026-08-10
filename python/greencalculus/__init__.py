@@ -149,6 +149,7 @@ class GreenCalculus:
         """Business travel (passenger transport)."""
         return self.calculate("business-travel", **body)
 
-    def batch(self, calculations: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """Run many calculations in one request."""
-        return self.calculate("batch", calculations=calculations)
+    def batch(self, items: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Run many calculations in one request. Each item names a `methodology`
+        and carries that methodology's own arguments."""
+        return self.calculate("batch", items=items)
