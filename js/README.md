@@ -19,11 +19,11 @@ import { GreenCalculus } from "greencalculus";
 
 const gc = new GreenCalculus({ apiKey: "gc_live_..." });
 
-// A sourced emission factor. The response nests the row under `factor`, and the
-// row carries its numeric value (also under `factor`), plus source & version.
-const row = (await gc.factor("grid.gbr.electricity.location_based")).factor;
-console.log(row.factor.value, row.factor.unit); // 0.13096 kg CO2e per kWh
-console.log(row.source.id);                     // DEFRA_2026
+// A sourced emission factor. value & unit are at the top level for convenience;
+// the full sourced row (source cell, gas, GWP set) stays under `factor`.
+const f = await gc.factor("grid.gbr.electricity.location_based");
+console.log(f.value, f.unit);       // 0.13096 kg CO2e per kWh
+console.log(f.factor.source.id);    // DEFRA_2026
 
 // An audit-traced calculation — the full working, not just a total
 const r = await gc.ghgActivity({

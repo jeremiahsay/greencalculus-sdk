@@ -19,11 +19,11 @@ from greencalculus import GreenCalculus
 
 gc = GreenCalculus(api_key="gc_live_...")
 
-# A sourced emission factor. The response nests the row under "factor", and the
-# row carries its numeric value (also under "factor"), plus source & version.
-row = gc.factor("grid.gbr.electricity.location_based")["factor"]
-print(row["factor"]["value"], row["factor"]["unit"])   # 0.13096 kg CO2e per kWh
-print(row["source"]["id"])                             # DEFRA_2026
+# A sourced emission factor. value & unit are at the top level for convenience;
+# the full sourced row (source cell, gas, GWP set) stays under ["factor"].
+f = gc.factor("grid.gbr.electricity.location_based")
+print(f["value"], f["unit"])          # 0.13096 kg CO2e per kWh
+print(f["factor"]["source"]["id"])    # DEFRA_2026
 
 # An audit-traced calculation — the full working, not just a total
 r = gc.ghg_activity(

@@ -17,8 +17,8 @@ Get a **free API key** (1,000 calls/month, no card) at **[greencalculus.com/deve
 from greencalculus import GreenCalculus
 gc = GreenCalculus(api_key="gc_live_...")
 
-row = gc.factor("grid.gbr.electricity.location_based")["factor"]
-print(row["factor"]["value"], row["factor"]["unit"])  # 0.13096 kg CO2e per kWh
+f = gc.factor("grid.gbr.electricity.location_based")
+print(f["value"], f["unit"])  # 0.13096 kg CO2e per kWh
 
 r = gc.ghg_activity(activity={"value": 1000, "unit": "kWh"},
                     factor_key="grid.gbr.electricity.location_based")
@@ -30,8 +30,8 @@ print(r["emissions"]["value"], r["source"]["id"])
 import { GreenCalculus } from "greencalculus";
 const gc = new GreenCalculus({ apiKey: "gc_live_..." });
 
-const row = (await gc.factor("grid.gbr.electricity.location_based")).factor;
-console.log(row.factor.value, row.factor.unit);
+const f = await gc.factor("grid.gbr.electricity.location_based");
+console.log(f.value, f.unit);
 
 const r = await gc.ghgActivity({
   activity: { value: 1000, unit: "kWh" },
