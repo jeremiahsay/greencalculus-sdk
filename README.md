@@ -1,0 +1,56 @@
+# GreenCalculus SDKs
+
+Official client libraries for the **[GreenCalculus API](https://greencalculus.com/developers)** — sourced greenhouse-gas emission factors and audit-traced calculations. Every value comes back with its **source cell and data version**, so you return citable numbers instead of guesses.
+
+| Language | Package | Install |
+|---|---|---|
+| Python | [`./python`](./python) | `pip install greencalculus` |
+| JavaScript / TypeScript | [`./js`](./js) | `npm install greencalculus` |
+| Postman | [`./postman`](./postman) | import the collection |
+
+Get a **free API key** (1,000 calls/month, no card) at **[greencalculus.com/developers](https://greencalculus.com/developers)**.
+
+## Quickstart
+
+**Python**
+```python
+from greencalculus import GreenCalculus
+gc = GreenCalculus(api_key="gc_live_...")
+
+row = gc.factor("grid.gbr.electricity.location_based")["factor"]
+print(row["factor"]["value"], row["factor"]["unit"])  # 0.13096 kg CO2e per kWh
+
+r = gc.ghg_activity(activity={"value": 1000, "unit": "kWh"},
+                    factor_key="grid.gbr.electricity.location_based")
+print(r["emissions"]["value"], r["source"]["id"])
+```
+
+**JavaScript / TypeScript**
+```ts
+import { GreenCalculus } from "greencalculus";
+const gc = new GreenCalculus({ apiKey: "gc_live_..." });
+
+const row = (await gc.factor("grid.gbr.electricity.location_based")).factor;
+console.log(row.factor.value, row.factor.unit);
+
+const r = await gc.ghgActivity({
+  activity: { value: 1000, unit: "kWh" },
+  factor_key: "grid.gbr.electricity.location_based",
+});
+console.log(r.emissions.value, r.source.id);
+```
+
+## What you get
+
+- **13,000+ sourced factors** across 50+ categories — grid, fuels, freight, refrigerants, AFOLU, CBAM, construction, spend-based EEIO. Every value returns its source cell, licence and uncertainty.
+- **Seven calculation engines** — GHG Protocol activity, PCAF financed emissions, embodied EN 15978, electricity, freight, spend-based, business travel. The full working, never just a total.
+- **Reproducible** — a deterministic receipt hash on every result, and `?as_of=` pins any factor to a past data version.
+- **Agent-native** — the same data over MCP at `mcp.greencalculus.com`.
+
+## Links
+
+- **Docs:** https://greencalculus.com/developers/docs
+- **Data rights, continuity & redistribution:** https://greencalculus.com/developers/trust
+- **Status:** https://greencalculus.com/developers/status
+
+MIT licensed. Issues and PRs welcome.

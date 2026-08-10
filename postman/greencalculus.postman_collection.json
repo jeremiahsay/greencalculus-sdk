@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "GreenCalculus API",
+    "description": "Sourced carbon emission factors + audit-traced calculations. Set the `api_key` collection variable (free key: https://greencalculus.com/developers).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{api_key}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://api.greencalculus.com" },
+    { "key": "api_key", "value": "gc_live_your_key_here" }
+  ],
+  "item": [
+    {
+      "name": "Factor lookup",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base_url}}/v1/factors/grid.gbr.electricity.location_based",
+          "host": ["{{base_url}}"],
+          "path": ["v1", "factors", "grid.gbr.electricity.location_based"]
+        },
+        "description": "A single sourced factor. Add ?as_of=<version> to pin a past data version."
+      }
+    },
+    {
+      "name": "Resolve (plain language -> factor)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/v1/calculate/resolve", "host": ["{{base_url}}"], "path": ["v1", "calculate", "resolve"] },
+        "body": { "mode": "raw", "raw": "{\n  \"description\": \"UK grid electricity\"\n}" }
+      }
+    },
+    {
+      "name": "Calculate — GHG activity",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/v1/calculate/ghg-activity", "host": ["{{base_url}}"], "path": ["v1", "calculate", "ghg-activity"] },
+        "body": { "mode": "raw", "raw": "{\n  \"activity\": { \"value\": 1000, \"unit\": \"kWh\" },\n  \"factor_key\": \"grid.gbr.electricity.location_based\"\n}" }
+      }
+    },
+    {
+      "name": "Calculate — PCAF financed emissions",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/v1/calculate/pcaf", "host": ["{{base_url}}"], "path": ["v1", "calculate", "pcaf"] },
+        "body": { "mode": "raw", "raw": "{\n  \"asset_class\": \"listed_equity_corporate_bonds\",\n  \"holdings\": [{\n    \"outstanding_amount\": 1000000,\n    \"denominator\": { \"type\": \"evic\", \"value\": 2500000000000 },\n    \"company_emissions\": { \"value\": 20000000 },\n    \"data_quality_score\": 2\n  }]\n}" }
+      }
+    },
+    {
+      "name": "Calculate — Embodied (EN 15978)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/v1/calculate/embodied", "host": ["{{base_url}}"], "path": ["v1", "calculate", "embodied"] },
+        "body": { "mode": "raw", "raw": "{\n  \"materials\": [{\n    \"material_key\": \"materials.concrete.ready_mix.c8_10\",\n    \"quantity\": { \"value\": 50, \"unit\": \"m3\" },\n    \"boundary\": \"A1-C\"\n  }]\n}" }
+      }
+    },
+    {
+      "name": "Calculate — Freight",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/v1/calculate/freight", "host": ["{{base_url}}"], "path": ["v1", "calculate", "freight"] },
+        "body": { "mode": "raw", "raw": "{\n  \"mass\": { \"value\": 1, \"unit\": \"tonne\" },\n  \"distance\": { \"value\": 100, \"unit\": \"km\" },\n  \"factor_key\": \"freight.rail.tonne_km\"\n}" }
+      }
+    }
+  ]
+}

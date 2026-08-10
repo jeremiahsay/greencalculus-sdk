@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+python/build/
+python/dist/
+.venv/
+venv/
+
+# JavaScript
+node_modules/
+js/dist/
+*.tsbuildinfo
+
+# OS / editor
+.DS_Store
+*.log

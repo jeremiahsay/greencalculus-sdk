@@ -1,0 +1,48 @@
+{
+  "name": "greencalculus",
+  "version": "0.1.0",
+  "description": "The carbon-accounting API — sourced emission factors and audit-traced calculations, every value traceable to its source.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "carbon",
+    "emissions",
+    "co2",
+    "co2e",
+    "ghg",
+    "greenhouse-gas",
+    "emission-factors",
+    "esg",
+    "pcaf",
+    "climate",
+    "sustainability",
+    "carbon-accounting",
+    "scope-3",
+    "embodied-carbon"
+  ],
+  "author": "GreenCalculus <jeremiah@greencalculus.com>",
+  "license": "MIT",
+  "homepage": "https://greencalculus.com/developers",
+  "repository": {
+    "type": "git",
+    "url": "github:jeremiahsay/greencalculus-sdk"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}
