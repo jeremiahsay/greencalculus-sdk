@@ -1,5 +1,7 @@
 # GreenCalculus SDKs
 
+[![smithery badge](https://smithery.ai/badge/greencalculus/api)](https://smithery.ai/servers/greencalculus/api)
+
 Official client libraries for the **[GreenCalculus API](https://greencalculus.com/developers)** — sourced greenhouse-gas emission factors and audit-traced calculations. Every value comes back with its **source cell and data version**, so you return citable numbers instead of guesses.
 
 | Language | Package | Install |
