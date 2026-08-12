@@ -49,6 +49,20 @@ console.log(r.emissions.value, r.source.id);
 - **Reproducible** — a deterministic receipt hash on every result, and `?as_of=` pins any factor to a past data version.
 - **Agent-native** — the same data over MCP at `mcp.greencalculus.com`.
 
+## Use it from an AI agent (MCP)
+
+GreenCalculus runs as a remote MCP server, so Claude — or any MCP client — can look up a factor or run a calculation mid-conversation and hand back the **source** with the answer, not just a number.
+
+Add it to your MCP client config:
+
+```json
+{ "mcpServers": { "greencalculus": { "url": "https://mcp.greencalculus.com", "headers": { "Authorization": "Bearer gc_live_..." } } } }
+```
+
+**10 tools:** `lookup_factor` · `search_factors` · `resolve_factor` · `calculate_activity` · `calculate_embodied` · `calculate_pcaf` · `calculate_electricity` · `calculate_freight` · `calculate_spend` · `calculate_business_travel`
+
+Listed on the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.greencalculus/api` and on [Smithery](https://smithery.ai/servers/greencalculus/api). Discovery (listing tools) is open; calling a tool needs a free key.
+
 ## Links
 
 - **Docs:** https://greencalculus.com/developers/docs
