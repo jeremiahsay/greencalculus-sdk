@@ -59,7 +59,9 @@ Add it to your MCP client config:
 { "mcpServers": { "greencalculus": { "url": "https://mcp.greencalculus.com", "headers": { "Authorization": "Bearer gc_live_..." } } } }
 ```
 
-**10 tools:** `lookup_factor` · `search_factors` · `resolve_factor` · `calculate_activity` · `calculate_embodied` · `calculate_pcaf` · `calculate_electricity` · `calculate_freight` · `calculate_spend` · `calculate_business_travel`
+**12 tools:** `lookup_factor` · `lookup_factors` · `search_factors` · `resolve_factor` · `explain_absence` · `calculate_activity` · `calculate_embodied` · `calculate_pcaf` · `calculate_electricity` · `calculate_freight` · `calculate_spend` · `calculate_business_travel`
+
+`lookup_factors` batches a list of keys into one call instead of one per key; `explain_absence` answers why a factor you expected is not there, which is usually the question behind "do you have X?".
 
 Listed on the [official MCP registry](https://registry.modelcontextprotocol.io) as `com.greencalculus/api` and on [Smithery](https://smithery.ai/servers/greencalculus/api). Discovery (listing tools) is open; calling a tool needs a free key.
 
