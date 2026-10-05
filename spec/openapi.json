@@ -422,6 +422,84 @@
         },
         "type": "object"
       },
+      "Check": {
+        "additionalProperties": true,
+        "description": "Per-row verdicts for factors you already use: which published factor each value is (source, edition, line), whether it is current, and what is wrong with it.",
+        "properties": {
+          "coverage": {
+            "description": "Plain statement of which sources carry edition history and which are current-only.",
+            "type": "string"
+          },
+          "index": {
+            "additionalProperties": true,
+            "description": "What was checked against: build date, MasterBrain version, DEFRA editions held.",
+            "type": "object"
+          },
+          "rows": {
+            "items": {
+              "additionalProperties": true,
+              "properties": {
+                "current": {
+                  "additionalProperties": true,
+                  "description": "The current value to use instead, with the percentage change and its proof page (proof_url) where we hold the factor. Suggested, never substituted.",
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                },
+                "findings": {
+                  "items": {
+                    "additionalProperties": true,
+                    "properties": {
+                      "kind": {
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "input": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "match": {
+                  "additionalProperties": true,
+                  "description": "The published factor the value matched: source ids and names, line, unit, value, a link to that edition (edition_link) and, when the match is on the current edition, its proof page (proof_url).",
+                  "type": "object"
+                },
+                "row": {
+                  "type": "integer"
+                },
+                "status": {
+                  "enum": [
+                    "current",
+                    "outdated",
+                    "fix",
+                    "review",
+                    "unverifiable",
+                    "notcomparable"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "summary": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "description": "Row count per status.",
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
       "Citation": {
         "additionalProperties": true,
         "description": "A ready-to-paste citation assembled from the source registry.",
@@ -3557,6 +3635,111 @@
         },
         "security": [],
         "summary": "One release — every row it added, changed or withdrew",
+        "tags": [
+          "Discovery"
+        ]
+      }
+    },
+    "/v1/check": {
+      "post": {
+        "description": "Open (no key), up to 25 rows per request, limited per IP. Send the factors your inventory already uses, each as a description, the value AS TYPED (a string keeps its precision: \"0.207\" matches anything that rounds to it) and the unit as written. Each row comes back with the published factor it matches (source, edition, line), a status (current, outdated, fix, review, unverifiable, notcomparable), findings such as an old edition, old IPCC warming values, a 1,000x unit slip, net instead of gross calorific value or an upstream (WTT) factor used for combustion, and the current value to use instead. UK government factors carry every edition 2019-2026 except 2021; other sources are current-edition only, so a non-UK value can be identified but not yet called out of date. Nothing is substituted, and the request body is neither logged nor stored.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "rows": [
+                  {
+                    "description": "Purchased electricity",
+                    "unit": "kgCO2e/kWh",
+                    "value": "0.19338"
+                  },
+                  {
+                    "description": "R-410A",
+                    "unit": "GWP",
+                    "value": "2088"
+                  }
+                ]
+              },
+              "schema": {
+                "properties": {
+                  "example": {
+                    "description": "Optional. Marks a request as a demonstration (our own page sends it for its worked example) so it is not counted as a check.",
+                    "type": "boolean"
+                  },
+                  "rows": {
+                    "items": {
+                      "properties": {
+                        "description": {
+                          "description": "As written in your sheet.",
+                          "example": "Purchased electricity",
+                          "type": "string"
+                        },
+                        "unit": {
+                          "description": "As written, e.g. kgCO2e/kWh, kg CO2e per litre, kgCO2e/pkm, GWP.",
+                          "example": "kgCO2e/kWh",
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "As typed. Send a string to keep trailing zeros.",
+                          "example": "0.19338",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "value",
+                        "unit"
+                      ],
+                      "type": "object"
+                    },
+                    "maxItems": 25,
+                    "minItems": 1,
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "rows"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Check"
+                }
+              }
+            },
+            "description": "One verdict per row, a status summary, the index the check ran against and its coverage"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Body is not JSON, rows is empty, or more than 25 rows"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "description": "Too many checks from this address; Retry-After says when to try again"
+          }
+        },
+        "security": [],
+        "summary": "Check — which published factor is each of your numbers, and is it still right?",
         "tags": [
           "Discovery"
         ]
